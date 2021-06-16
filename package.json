@@ -1,7 +1,7 @@
 {
-  "name": "@din0/native-design-system",
-  "version": "1.0.0",
-  "description": "",
+  "name": "native-design-system",
+  "version": "1.1.0",
+  "description": "## Getting started",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,7 @@
     "react-native"
   ],
   "author": "",
-  "license": "",
+  "license": "ISC",
   "dependencies": {
     "clamp": "^1.0.1",
     "prop-types": "^15.7.2"
@@ -52,5 +52,16 @@
     "thread-loader": "^2.1.2",
     "typescript": "^3.7.5",
     "url-loader": "^3.0.0"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinoNugroho93/buttonDesign.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dinoNugroho93/buttonDesign/issues"
+  },
+  "homepage": "https://github.com/dinoNugroho93/buttonDesign#readme"
 }

@@ -2,60 +2,69 @@ import React from 'react';
 import { View, Text, TouchableOpacity, TouchableNativeFeedback, Platform, StyleSheet, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import { useThemeContext } from '../util/ThemeProvider';
+import { colors } from 'native-design-system';
+import { color } from 'react-native-reanimated';
 
-const getTextStyle = ({ size, outline, transparent, loading, disabled, theme, color }) => {
+const getTextStyle = ({ size, secondary, transparent, loading, disabled, theme, color, subtle, hover }) => {
   const textStyle = [{
     fontWeight: Platform.OS === 'android' ? 'bold' : '400',
     fontSize: theme.fontSize[size],
     margin: theme.buttonSize[size],
     color: theme.textColor.white,
   }];
-  if (outline || transparent) {
+  if (secondary || transparent || subtle) {
     textStyle.push({
-      color: theme.brandColor[color],
+      color: hover ? theme.brandColor.hover : theme.brandColor[color],
     });
   }
-  if (loading && outline) {
-    textStyle.push({
-      color: theme.brandColor[color] + '50',
-    });
-  }
+  // if (loading && subtle) {
+  //   textStyle.push({
+  //     color: theme.brandColor[color] + '50',
+  //   });
+  // }
   if (disabled) {
     textStyle.push({
-      color: theme.textColor.disabled,
+      color: theme.textColor.white,
+    });
+  }
+  if((disabled && secondary) || (disabled && subtle) || (disabled && transparent)){
+    textStyle.push({
+      color: theme.brandColor[color] + 70,
     });
   }
   return textStyle;
 };
 
 const getContainerStyle = (props) => {
-  const { outline, width, round, transparent, disabled, loading, size, length, theme, color, tint } = props;
+  const { secondary, width, subtle, transparent, disabled, loading, size, hover, theme, color, tint } = props;
   const buttonStyles = [styles.container];
   buttonStyles.push({
     backgroundColor: theme.brandColor[color],
     borderWidth: 1,
-    borderColor: theme.brandColor[color],
-    borderRadius: 20
+    borderColor: props.hover ? theme.brandColor.hover : theme.brandColor[color],
+    borderRadius: 5
   });
-  if (length === 'short') {
+  if (hover) {
     buttonStyles.push({
-      width: theme.buttonWidth[width],
+      backgroundColor: theme.brandColor.hover
     });
   }
-  if (round) {
+  if (subtle) {
     buttonStyles.push({
       borderRadius: theme.buttonSize[size] * 2,
+      borderColor: theme.brandColor.subtle,
+      backgroundColor: "transparent"
     });
   }
-  if (outline) {
+  if (secondary) {
     buttonStyles.push({
-      backgroundColor: theme.brandColor[color] + (tint ? '10' : '00'),
+      backgroundColor: "transparent" + (tint ? '10' : '00'),
     });
   }
   if (loading) {
     buttonStyles.push({
       borderWidth: 0,
-      backgroundColor: theme.brandColor[color] + '50',
+      backgroundColor: theme.brandColor[color] + 80,
     });
   }
   if (transparent) {
@@ -64,19 +73,44 @@ const getContainerStyle = (props) => {
       backgroundColor: 'transparent',
     });
   }
-  if (loading && outline) {
+  if (loading && subtle) {
     buttonStyles.push({
-      backgroundColor: theme.brandColor[color] + '20',
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.brandColor[color] + '30',
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: theme.brandColor.subtle,
+    });
+  } else if (loading && secondary) {
+    buttonStyles.push({
+      backgroundColor: "transparent" + (tint ? '10' : '00'),
+      borderWidth: 1,
+      borderColor: theme.brandColor[color],
     });
   }
+
   if (disabled) {
     buttonStyles.push({
-      backgroundColor: theme.brandColor.disabled,
+      backgroundColor: theme.brandColor[color] + 50,
       borderColor: theme.textColor.disabled,
     });
   }
+  if (disabled && subtle) {
+    buttonStyles.push({
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: theme.brandColor.subtle
+    })
+  } else if (disabled && secondary) {
+    buttonStyles.push({
+      backgroundColor: 'transparent',
+      borderColor: theme.textColor.disabled,
+    });
+  } else if(disabled && transparent) {
+    buttonStyles.push({
+      backgroundColor: 'transparent',
+    });
+  }
+
+
   return buttonStyles;
 };
 
@@ -87,7 +121,7 @@ const renderChildren = (props) => {
       {props.loading && !props.disabled &&
         <ActivityIndicator
           style={styles.iconStyle}
-          color={props.indicatorColor || props.theme.brandColor[props.color]} />}
+          color={props.theme.brandColor[props.color]} />}
       {props.leftIcon || props.icon &&
         <View style={styles.iconStyle}>
           {props.leftIcon || props.icon}
@@ -138,9 +172,9 @@ Button.propTypes = {
   /**  Pass the brand color */
   color: PropTypes.string,
   /**  Boolean value for round button */
-  round: PropTypes.bool,
+  subtle: PropTypes.bool,
   /**  Boolean value for outline button */
-  outline: PropTypes.bool,
+  secondary: PropTypes.bool,
   /**  Boolean value for disabled button */
   transparent: PropTypes.bool,
   /**  Boolean value for transparent button */
@@ -154,13 +188,13 @@ Button.propTypes = {
   /**  To pass custom icon on right */
   rightIcon: PropTypes.element,
   /**  To make button short or long */
-  length: PropTypes.oneOf(['long', 'short']),
+  hover: PropTypes.bool,
   /**  To enable outline button tint */
   tint: PropTypes.bool,
 };
 
 Button.defaultProps = {
-  children: 'Submit',
+  children: '',
   size: 'medium',
   length: 'long',
   width: 'medium',
@@ -168,6 +202,17 @@ Button.defaultProps = {
   tint: true,
 };
 
-b
-
+const styles = StyleSheet.create({
+  container: {
+    left: 0,
+    right: 0,
+    borderRadius: 2,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconStyle: {
+    paddingHorizontal: 5,
+  },
+});
 export default Button;

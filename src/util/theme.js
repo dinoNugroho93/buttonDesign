@@ -29,19 +29,15 @@ const theme = {
     'xxlarge': 90,
   },
   buttonSize: {
-    'xxsmall': 8,
-    'xsmall': 10,
     'small': 12,
     'medium': 14,
     'large': 16,
-    'xlarge': 18,
-    'xxlarge': 20,
   },
   buttonWidth: {
     'xxsmall': 100,
     'xsmall': 120,
     'small': 140,
-    'medium': 160,
+    'medium': 200,
     'large': 180,
     'xlarge': 200,
     'xxlarge': 220,
@@ -129,20 +125,24 @@ const theme = {
     'heading': colors.black[800],
     'subtle': colors.black[100],
     'grey': colors.grey[600],
-    'disabled': colors.bluegrey[400],
+    'disabled': colors.red[500]+ 50,
     'white': colors.blue[50],
   },
   brandColor: {
-    'primary': colors.red[500],
     'secondary': colors.yellow[800],
     'tertiary': colors.red[600],
     'background': '#f8f8f8',
-    'disabled': colors.bluegrey[100],
+    'disabled': colors.red[500] + 50,
     'white': colors.blue[50],
     'semitransparent': 'rgba(0, 0, 0, 0.3)',
     'grey': colors.grey[200],
     'clearWhite': '#fff',
     'outline': colors.grey[400],
+
+    'primary': colors.red[500],
+    'subtle': colors.grey[50],
+    'hover': colors.red[600]
+    
   },
 };
 

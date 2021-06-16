@@ -3,11 +3,11 @@
 
 ## Getting started
 
-`$ npm install @din0/native-design-system --save`
+`$ npm install native-design-system --save`
 
 ### Mostly automatic installation
 
-`$ react-native link @din0/native-design-system`
+`$ react-native link native-design-system`
 
 ### Manual installation
 

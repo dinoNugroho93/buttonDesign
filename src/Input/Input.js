@@ -1,12 +1,18 @@
 import React from 'react';
-import { View, TextInput, Text, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import PropTypes, { bool } from 'prop-types';
 import { useThemeContext } from '../util/ThemeProvider';
+import { useState } from 'react/cjs/react.development';
+import Feather from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const getContainerStyle = ({ theme, round, color, outline, error }) => {
+const getContainerStyle = ({ theme, round, color, outline, error, colorFocus }) => {
   const inputContainerStyle = [styles.container];
   inputContainerStyle.push({
-    borderBottomColor: theme.brandColor[color],
+    backgroundColor: '#eff0f6',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colorFocus
   });
   if (outline) {
     inputContainerStyle.push({
@@ -46,7 +52,7 @@ const getInputStyle = ({ theme, size, textColor }) => {
   inputStyle.push({
     fontSize: theme.fontSize[size],
     marginVertical: 0,
-    color: theme.textColor[textColor],
+    color: "#a0a3bd",
   });
   return inputStyle;
 };
@@ -75,14 +81,16 @@ const getCaptionStyle = ({ theme, size }) => {
 
 const Input = React.forwardRef((props, ref) => {
   const theme = useThemeContext();
+  const [colorFocus, setColorFocus] = useState('')
+  const [active, setActive] = useState(false)
   const showLabel = props.floatingLabel ? props.value.length > 0 : props.label;
   return (
     <View style={props.containerStyle}>
+      <View style={StyleSheet.flatten([getContainerStyle({ ...props, theme, colorFocus }), props.style])}>
       {showLabel ?
         <Text style={StyleSheet.flatten([getLabelStyle({ ...props, theme }), props.labelStyle])}>
           {props.label}
         </Text> : null}
-      <View style={StyleSheet.flatten([getContainerStyle({ ...props, theme }), props.style])}>
         {props.leftIcon &&
           <View style={styles.leftIcon}>
             {props.leftIcon}
@@ -94,11 +102,22 @@ const Input = React.forwardRef((props, ref) => {
           ref={ref}
           style={getInputStyle({ ...props, theme })}
           placeholder={props.floatingLabel ? props.label : props.placeholder}
+          onFocus={() => {
+            setColorFocus('black')
+            setActive(true)
+          }}
+          onBlur={() => {
+            setColorFocus('#eff0f6')
+            setActive(false)
+          }}
         />
-        {props.rightIcon &&
-          <View style={styles.rightIcon}>
-            {props.rightIcon}
-          </View>
+        {(props.rightIcon && props.value.length !== 0) && !props.disabled &&
+          <TouchableOpacity style={styles.rightIcon} onPress={props.rightIcon}>
+            {<Feather
+              name="close-outline"
+              size={20}
+              color={'black'} /> }
+          </TouchableOpacity>
         }
       </View>
       {(props.error && props.errorCaption) ?
@@ -128,7 +147,7 @@ Input.propTypes = {
   size: PropTypes.oneOf(['xxsmall', 'xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge']),
   disabled: PropTypes.bool,
   leftIcon: PropTypes.element,
-  rightIcon: PropTypes.element,
+  rightIcon: PropTypes.func,
   background: PropTypes.string,
 };
 
@@ -137,16 +156,17 @@ Input.defaultProps = {
   textColor: 'default',
   color: 'outline',
   size: 'medium',
-  labelColor: 'grey',
-  background: 'grey',
+  labelColor: '#eff0f6',
+  background: '#eff0f6',
   floatingLabel: false,
+
 };
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 0.5,
+    height: 50
   },
   input: {
     flex: 1,
