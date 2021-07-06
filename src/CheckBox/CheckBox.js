@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, TouchableNativeFeedback, Platform, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/Ionicons';
 import { useThemeContext } from '../util/ThemeProvider';
 
 const getTextStyle = ({ theme, size, textColor, iconRight }) => {
@@ -19,25 +19,47 @@ const getTextStyle = ({ theme, size, textColor, iconRight }) => {
   return textStyle;
 };
 
-const renderIcon = ({ style, theme, size, color, ...props }) => {
+const renderIcon = ({ style, theme, size, ...props }) => {
   if (props.checked) {
-    return (
-      props.checkedIcon ||
-      <MaterialIcons
-        name="check-box"
-        size={theme.fontSize[size] * 1.5}
-        color={theme.brandColor[color]}
-      />
-    );
+    if (props.disabled){
+      return (
+        props.checkedIcon ||
+        <MaterialIcons
+          name="checkmark-circle"
+          size={26}
+          color= {props.color + 50}
+        />
+      );
+    }else{
+      return (
+        props.checkedIcon ||
+        <MaterialIcons
+          name="checkmark-circle"
+          size={26}
+          color= {props.color}
+        />
+      );
+    }
   } else {
-    return (
-      props.uncheckedIcon ||
-      <MaterialIcons
-        name="check-box-outline-blank"
-        size={theme.fontSize[size] * 1.5}
-        color={theme.brandColor[color]}
-      />
-    );
+    if(props.disabled){
+      return (
+        props.uncheckedIcon ||
+        <MaterialIcons
+          name="ellipse"
+          size={26}
+          color={'#D9DBE9' + 50}
+        />
+      );
+    }else{
+      return (
+        props.uncheckedIcon ||
+        <MaterialIcons
+          name="ellipse"
+          size={26}
+          color={'#D9DBE9'}
+        />
+      );
+    }
   }
 };
 
@@ -67,15 +89,16 @@ CheckBox.propTypes = {
   iconRight: PropTypes.bool,
   color: PropTypes.string,
   textColor: PropTypes.string,
-  size: PropTypes.oneOf(['xxsmall', 'xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge']),
+  size: PropTypes.any,
   onPress: PropTypes.func.isRequired,
   checkedIcon: PropTypes.element,
   uncheckedIcon: PropTypes.element,
+  disabled: PropTypes.bool
 };
 
 CheckBox.defaultProps = {
-  size: 'medium',
-  color: 'primary',
+  size: 'default',
+  color: '#b52025',
   textColor: 'default',
 };
 

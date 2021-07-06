@@ -6,21 +6,29 @@ import { useState } from 'react/cjs/react.development';
 import Feather from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const getContainerStyle = ({ theme, round, color, outline, error, colorFocus }) => {
+const getContainerStyle = ({ theme, round, color, outline, error, colorFocus, succes }) => {
   const inputContainerStyle = [styles.container];
   inputContainerStyle.push({
     backgroundColor: '#eff0f6',
-    borderRadius: 5,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: colorFocus
   });
+  if (succes) {
+    inputContainerStyle.push({
+      backgroundColor: theme.brandColor.succes,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#00966D'
+    })
+  }
   if (outline) {
     inputContainerStyle.push({
       borderWidth: 1,
       borderBottomWidth: 1,
       borderColor: theme.brandColor[color],
       backgroundColor: theme.brandColor.background,
-      borderRadius: 5,
+      borderRadius: 8,
     });
   }
   if (round) {
@@ -39,10 +47,11 @@ const getContainerStyle = ({ theme, round, color, outline, error, colorFocus }) 
   }
   if (error) {
     inputContainerStyle.push({
-      borderColor: '#ff000080',
-      borderBottomColor: '#ff000080',
-      backgroundColor: '#ff000005',
-    });
+      backgroundColor: theme.brandColor.error,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#c30052'
+    })
   }
   return inputContainerStyle;
 };
@@ -52,7 +61,7 @@ const getInputStyle = ({ theme, size, textColor }) => {
   inputStyle.push({
     fontSize: theme.fontSize[size],
     marginVertical: 0,
-    color: "#a0a3bd",
+    color: "black",
   });
   return inputStyle;
 };
@@ -68,15 +77,37 @@ const getLabelStyle = ({ theme, size, labelColor }) => {
   return labelStyle;
 };
 
-const getCaptionStyle = ({ theme, size }) => {
-  const caption = [{
-    fontSize: theme.fontSize[size] * 0.8,
-    fontWeight: '600',
-    paddingLeft: 5,
-    paddingTop: 5,
-    color: '#ff000080',
-  }];
-  return caption;
+const getCaptionStyle = ({ theme, size, error, succes, caption }) => {
+  if(caption){
+    const caption = [{
+      fontSize: theme.fontSize[size] * 0.8,
+      fontWeight: '600',
+      paddingLeft: 5,
+      paddingTop: 5,
+      color: '#6E7191',
+    }];
+    return caption;
+  }
+  if (error) {
+    const caption = [{
+      fontSize: theme.fontSize[size] * 0.8,
+      fontWeight: '600',
+      paddingLeft: 5,
+      paddingTop: 5,
+      color: '#c30052',
+    }];
+    return caption;
+  }
+  if(succes){
+    const caption = [{
+      fontSize: theme.fontSize[size] * 0.8,
+      fontWeight: '600',
+      paddingLeft: 5,
+      paddingTop: 5,
+      color: '#00966D',
+    }];
+    return caption;
+  }
 };
 
 const Input = React.forwardRef((props, ref) => {
@@ -87,10 +118,6 @@ const Input = React.forwardRef((props, ref) => {
   return (
     <View style={props.containerStyle}>
       <View style={StyleSheet.flatten([getContainerStyle({ ...props, theme, colorFocus }), props.style])}>
-      {showLabel ?
-        <Text style={StyleSheet.flatten([getLabelStyle({ ...props, theme }), props.labelStyle])}>
-          {props.label}
-        </Text> : null}
         {props.leftIcon &&
           <View style={styles.leftIcon}>
             {props.leftIcon}
@@ -111,18 +138,26 @@ const Input = React.forwardRef((props, ref) => {
             setActive(false)
           }}
         />
-        {(props.rightIcon && props.value.length !== 0) && !props.disabled &&
+        {props.value.length > 0 && 
           <TouchableOpacity style={styles.rightIcon} onPress={props.rightIcon}>
             {<Feather
               name="close-outline"
               size={20}
-              color={'black'} /> }
+              color={'black'} />}
           </TouchableOpacity>
         }
       </View>
+      {((props.caption && !props.error) || (props.caption && !props.succes)) ?
+        <Text style={StyleSheet.flatten([getCaptionStyle({ ...props, theme }), props.labelStyle])}>
+          {props.caption}
+        </Text> : null}
       {(props.error && props.errorCaption) ?
         <Text style={StyleSheet.flatten([getCaptionStyle({ ...props, theme }), props.labelStyle])}>
           {props.errorCaption}
+        </Text> : null}
+      {(props.succes && props.succesCaption) ?
+        <Text style={StyleSheet.flatten([getCaptionStyle({ ...props, theme }), props.labelStyle])}>
+          {props.succesCaption}
         </Text> : null}
     </View>
   );
@@ -149,6 +184,9 @@ Input.propTypes = {
   leftIcon: PropTypes.element,
   rightIcon: PropTypes.func,
   background: PropTypes.string,
+  succes: PropTypes.bool,
+  succesCaption: PropTypes.string,
+  caption: PropTypes.string,
 };
 
 Input.defaultProps = {
@@ -159,6 +197,7 @@ Input.defaultProps = {
   labelColor: '#eff0f6',
   background: '#eff0f6',
   floatingLabel: false,
+  succes: false,
 
 };
 
@@ -170,9 +209,10 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    padding: 5,
-    paddingVertical: 10,
+    //padding: 5,
+    //paddingVertical: 10,
     paddingHorizontal: 15,
+    fontSize: 1
   },
   leftIcon: {
     paddingLeft: 10,

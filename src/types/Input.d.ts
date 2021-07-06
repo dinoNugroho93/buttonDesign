@@ -25,6 +25,11 @@ interface InputProps {
   leftIcon?: IconNode,
   rightIcon?: IconNode,
   background?: string,
+  succes: boolean,
+  succes: boolean,
+  succesCaption?: string,
+  caption?:string,
+
 }
 
 
