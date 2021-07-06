@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Ionicons';
 import Input from '../Input/Input';
 import PropTypes from 'prop-types';
 import { useThemeContext } from '../util/ThemeProvider';
@@ -15,7 +15,7 @@ const renderIndicator = (props) => {
         <TouchableOpacity onPress={props.onCancel}>
           {props.rightIcon ||
             <Feather
-              name="x-circle"
+              name="search-outline"
               size={20}
               color={props.theme.brandColor[props.iconColor]} />
           }

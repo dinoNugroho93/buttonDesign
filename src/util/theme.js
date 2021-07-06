@@ -141,7 +141,10 @@ const theme = {
 
     'primary': colors.red[500],
     'subtle': colors.grey[50],
-    'hover': colors.red[600]
+    'hover': colors.red[600],
+    'succes':colors.green[50],
+    'succesBorder': colors.green[100],
+    'error': colors.red.lingt,
     
   },
 };
